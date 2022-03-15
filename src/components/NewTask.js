@@ -1,16 +1,20 @@
 import React, { useState } from "react";
-import { connect } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { createTask } from "../api";
 import { addTask } from "../redux/action";
 
 const NewTask = (props) => {
-  const [title, setTitle] = useState();
+  const [task, setTask] = useState();
+  const dispatch = useDispatch();
 
   const navigate = useNavigate();
 
   const submitHandler = (event) => {
     event.preventDefault();
-    props.addTask(title);
+    props.addTask(task);
+    dispatch(createTask(task));
+    console.log(task);
     navigate("/");
   };
 
@@ -19,7 +23,7 @@ const NewTask = (props) => {
       <input
         name="title_input_name"
         placeholder="title"
-        onChange={(e) => setTitle(e.target.value)}
+        onChange={(e) => setTask(e.target.value)}
       />
       <button className="btn" type="submit">
         ADD TASK
@@ -30,11 +34,20 @@ const NewTask = (props) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addTask: (title) => {
-      return dispatch(addTask(title));
+    addTask: (task) => {
+      return dispatch(addTask(task));
     },
   };
 };
+
+// const mapDispatchToProps = (dispatch) => {
+//   return {
+//     createTask: (task) => {
+//       return dispatch(createTask(task));
+//     },
+//   };
+// };
+
 const mapStateToProps = (state) => {
   return {
     state: state,

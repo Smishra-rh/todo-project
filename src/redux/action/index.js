@@ -1,11 +1,28 @@
-const addTask = (props) => {
-  return {
-    type: "ADD_TASK",
-    payload: {
-      id: new Date().getTime().toString(),
-      data: props,
-    },
-  };
+import * as api from "../../api/index";
+
+// const addTask = (props) => {
+//   return {
+//     type: "ADD_TASK",
+//     payload: {
+//       id: new Date().getTime().toString(),
+//       taskItem: props,
+//     },
+//   };
+// };
+
+const addTask = (props) => async (dispatch) => {
+  try {
+    const { data } = await api.createTask(props);
+    dispatch({
+      type: "ADD_TASK",
+      payload: {
+        id: data._id,
+        taskItem: data.props,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const deleteTask = (id) => {
@@ -19,8 +36,8 @@ const editTask = (props) => {
   return {
     type: "EDIT_TASK",
     payload: {
-      id: new Date().getTime().toString(),
-      data: props,
+      id: props.id,
+      updatedTaskItem: props.resetTitle,
     },
   };
 };
